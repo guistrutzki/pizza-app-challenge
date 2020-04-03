@@ -14,6 +14,10 @@ const AppContainer: FC = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name={ROUTES.PRELOAD} component={SCREENS.PRELOAD} />
+        <Stack.Screen
+          name={ROUTES.CHOOSE_SIZE}
+          component={SCREENS.CHOOSE_SIZE}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
