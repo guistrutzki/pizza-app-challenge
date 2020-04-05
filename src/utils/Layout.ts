@@ -7,5 +7,12 @@ const statusBarHeight = getStatusBarHeight();
 const headerBarHeight = statusBarHeight + 50;
 const deviceWidth = width;
 const deviceHeight = height;
+const isSmallDevice = height < 700;
 
-export { statusBarHeight, headerBarHeight, deviceWidth, deviceHeight };
+export {
+  statusBarHeight,
+  headerBarHeight,
+  deviceWidth,
+  deviceHeight,
+  isSmallDevice,
+};

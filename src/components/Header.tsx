@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import styled from 'styled-components/native';
+import styled, { ReactNativeStyledInterface } from 'styled-components/native';
 
-import { headerBarHeight, statusBarHeight } from '../utils/Layout';
+import { headerBarHeight, statusBarHeight } from '../utils/layout';
 
 const Container = styled.View({
   flexDirection: 'row',
@@ -18,16 +18,17 @@ const Container = styled.View({
   shadowRadius: 12.35,
   elevation: 20,
   backgroundColor: '#fff',
+  zIndex: 50,
 });
 
 const HeaderArea = styled.View(
   {
-    flex: 1,
     alignItems: 'center',
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   ({ alignment }: { alignment: string }) => ({
-    justifyContent: alignment,
+    flex: alignment === 'center' ? 3 : 1,
   }),
 );
 
