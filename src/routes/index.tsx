@@ -18,6 +18,10 @@ const AppContainer: FC = () => {
           name={ROUTES.CHOOSE_SIZE}
           component={SCREENS.CHOOSE_SIZE}
         />
+        <Stack.Screen
+          name={ROUTES.CHOOSE_TOPPINGS}
+          component={SCREENS.CHOOSE_TOPPINGS}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

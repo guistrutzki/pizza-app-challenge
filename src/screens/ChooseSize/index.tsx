@@ -1,10 +1,14 @@
 import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components/native';
+import { useNavigation } from '@react-navigation/native';
 
 import Header from '../../components/Header';
 import { isSmallDevice, deviceWidth } from '../../utils/layout';
 import normalize from '../../utils/normalize';
 import pizzaImg from '../../resources/images/pizza.png';
+import Constants from '../../routes/utils/Constants';
+
+const { ROUTES } = Constants;
 
 const Container = styled.View({
   flex: 1,
@@ -154,6 +158,8 @@ const ButtonText = styled.Text({
 });
 
 const ChooseSize: FC = () => {
+  const navigation = useNavigation();
+
   const [selectedSize, setselectedSize] = useState<number>(1);
   const [selectedCrust, setSelectedCrust] = useState<number | null>(null);
   const [sizeValue, setSizeValue] = useState<number>(0);
@@ -207,11 +213,11 @@ const ChooseSize: FC = () => {
 
   return (
     <>
-      {/* //TODO FIX THIS SHIT */}
+      {/* //TODO FIX THIS */}
       <Header
         headerCenter={
           <HeaderTitleWrapper>
-            <HeaderTitleText>Choose Your Pizza</HeaderTitleText>
+            <HeaderTitleText>Pizza&apos;s Size</HeaderTitleText>
           </HeaderTitleWrapper>
         }
       />
@@ -245,6 +251,7 @@ const ChooseSize: FC = () => {
         </CrustWrapper>
 
         <ButtonWrapper
+          onPress={(): void => navigation.navigate(ROUTES.CHOOSE_TOPPINGS)}
           disabled={selectedCrust === null}
           isDisabled={selectedCrust === null}>
           <ButtonText>Next</ButtonText>
