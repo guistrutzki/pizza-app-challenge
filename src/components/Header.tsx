@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import styled, { ReactNativeStyledInterface } from 'styled-components/native';
+import React, { FC, ReactElement } from 'react';
+import styled from 'styled-components/native';
 
 import { headerBarHeight, statusBarHeight } from '../utils/layout';
 
@@ -33,9 +33,9 @@ const HeaderArea = styled.View(
 );
 
 interface HeaderProps {
-  headerLeft?: FC;
-  headerCenter?: FC;
-  headerRight?: FC;
+  headerLeft?: ReactElement;
+  headerCenter?: ReactElement;
+  headerRight?: ReactElement;
 }
 
 const Header: FC<HeaderProps> = ({
