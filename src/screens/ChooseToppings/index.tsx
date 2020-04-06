@@ -1,9 +1,12 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { ImageSourcePropType } from 'react-native';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
 
 import Header from '../../components/Header';
+import { ApplicationState } from '../../state';
+import { PizzaState } from '../../state/ducks/Pizza/types';
 import { isSmallDevice, deviceWidth } from '../../utils/layout';
 import normalize from '../../utils/normalize';
 import pizzaImg from '../../resources/images/pizza.png';
@@ -124,6 +127,23 @@ interface ToppingInterface {
 
 const ChooseToppings: FC = () => {
   const navigation = useNavigation();
+  const pizzaState: PizzaState = useSelector(
+    (state: ApplicationState) => state.pizza,
+  );
+
+  const [toppingLimit, setToppingLimit] = useState<number>(7);
+  const [aditionalValue, setAditionalValue] = useState<number>(0);
+
+  // 0- Small / 1- Medium / 2-Large
+  const toppingLimits = {
+    0: 5,
+    1: 7,
+    2: 9,
+  };
+
+  useEffect(() => {
+    setToppingLimit(toppingLimits[pizzaState.size]);
+  }, []);
 
   const [selectedToppings, setSelectedToppings] = useState<
     ToppingInterface[] | []
@@ -179,6 +199,16 @@ const ChooseToppings: FC = () => {
   };
 
   const handleToppingClick = (topping: ToppingInterface): void => {
+    if (selectedToppings.length === toppingLimit) {
+      // eslint-disable-next-line no-alert
+      alert('You reached the maximum ingredients for this pizza size');
+      return;
+    }
+
+    if (selectedToppings.length >= 3) {
+      setAditionalValue(aditionalValue + 0.5);
+    }
+
     setSelectedToppings([...selectedToppings, topping]);
   };
 
@@ -186,6 +216,10 @@ const ChooseToppings: FC = () => {
     const filteredArray = selectedToppings.filter(
       (item) => item.name !== topping.name,
     );
+
+    if (filteredArray.length >= 3) {
+      setAditionalValue(aditionalValue - 0.5);
+    }
 
     setSelectedToppings([...filteredArray]);
   };
@@ -208,7 +242,11 @@ const ChooseToppings: FC = () => {
         <PizzaWrapper>
           <PizzaImg source={pizzaImg} />
           {/* <PizzaPrice>{`$${sizeValue + crustValue},00`}</PizzaPrice> */}
-          <PizzaPrice>$10,00</PizzaPrice>
+          <PizzaPrice>
+            {`$${(pizzaState.totalValue + aditionalValue)
+              .toFixed(2)
+              .replace('.', ',')}`}
+          </PizzaPrice>
         </PizzaWrapper>
 
         <Label>Available toppings</Label>

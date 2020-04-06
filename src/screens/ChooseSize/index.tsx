@@ -1,8 +1,10 @@
 import React, { FC, useState, useEffect } from 'react';
 import styled from 'styled-components/native';
+import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
 import Header from '../../components/Header';
+import PizzaActions from '../../state/ducks/Pizza/actions';
 import { isSmallDevice, deviceWidth } from '../../utils/layout';
 import normalize from '../../utils/normalize';
 import pizzaImg from '../../resources/images/pizza.png';
@@ -159,6 +161,7 @@ const ButtonText = styled.Text({
 
 const ChooseSize: FC = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [selectedSize, setselectedSize] = useState<number>(1);
   const [selectedCrust, setSelectedCrust] = useState<number | null>(null);
@@ -174,6 +177,17 @@ const ChooseSize: FC = () => {
 
   const handleCrustChange = (option: number): void => {
     setSelectedCrust(option);
+  };
+
+  const handleNextStep = (): void => {
+    dispatch(
+      PizzaActions.setPizzaSize({
+        totalValue: crustValue + sizeValue,
+        crust: selectedCrust,
+        size: selectedSize,
+      }),
+    );
+    navigation.navigate(ROUTES.CHOOSE_TOPPINGS);
   };
 
   useEffect(() => {
@@ -243,6 +257,7 @@ const ChooseSize: FC = () => {
         <CrustWrapper>
           {crustOptions.map((option: string, index: number) => (
             <CrustOption
+              key={option}
               isSelected={selectedCrust === index}
               onPress={(): void => handleCrustChange(index)}>
               <CrustOptionText>{option}</CrustOptionText>
@@ -251,7 +266,7 @@ const ChooseSize: FC = () => {
         </CrustWrapper>
 
         <ButtonWrapper
-          onPress={(): void => navigation.navigate(ROUTES.CHOOSE_TOPPINGS)}
+          onPress={handleNextStep}
           disabled={selectedCrust === null}
           isDisabled={selectedCrust === null}>
           <ButtonText>Next</ButtonText>

@@ -2,8 +2,8 @@ import { Reducer } from 'redux';
 import { PizzaState, PizzaTypes } from './types';
 
 const INITIAL_STATE: PizzaState = {
-  crust: '',
-  size: '',
+  crust: 1,
+  size: 0,
   totalValue: 0,
 };
 

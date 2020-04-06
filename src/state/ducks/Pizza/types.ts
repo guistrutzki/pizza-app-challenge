@@ -3,7 +3,7 @@ export enum PizzaTypes {
 }
 
 export interface PizzaState {
-  size: string;
-  crust: string;
+  size: number;
+  crust: number;
   totalValue: number;
 }

@@ -1,8 +1,8 @@
 import { PizzaTypes } from './types';
 
 interface PizzaSizeInterface {
-  crust: string;
-  size: string;
+  crust: number | null;
+  size: number;
   totalValue: number;
 }
 
