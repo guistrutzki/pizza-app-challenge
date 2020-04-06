@@ -8,6 +8,7 @@ import pepperoniLabel from './pepperoni-label.png';
 import pineappleLabel from './pineapple-label.png';
 import sausageLabel from './sausage-label.png';
 import spinachLabel from './spinach-label.png';
+import closeIcon from './close.png';
 
 export {
   baconLabel,
@@ -20,4 +21,5 @@ export {
   pineappleLabel,
   sausageLabel,
   spinachLabel,
+  closeIcon,
 };

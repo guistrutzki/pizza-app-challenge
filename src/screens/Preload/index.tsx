@@ -11,7 +11,7 @@ const Container = styled.SafeAreaView({
   flex: 1,
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#CEBEBE',
+  backgroundColor: '#ECECED',
 });
 
 const Preload: FC = () => {

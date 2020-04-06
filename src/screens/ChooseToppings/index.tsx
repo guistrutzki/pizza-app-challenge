@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
-import { ImageSourcePropType } from 'react-native';
+import { Alert, ImageSourcePropType } from 'react-native';
+
 import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
@@ -120,6 +121,12 @@ const RemoveToppingButton = styled.TouchableOpacity({
   borderRadius: 10,
 });
 
+const RemoveToppingIcon = styled.Image({
+  width: 20,
+  height: 20,
+  borderRadius: 10,
+});
+
 interface ToppingInterface {
   name: string;
   image: ImageSourcePropType;
@@ -213,15 +220,27 @@ const ChooseToppings: FC = () => {
   };
 
   const handleRemoveTopping = (topping: ToppingInterface): void => {
-    const filteredArray = selectedToppings.filter(
-      (item) => item.name !== topping.name,
-    );
+    Alert.alert('Remove topping', 'Do you want to remove this topping?', [
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: (): void => {
+          const filteredArray = selectedToppings.filter(
+            (item) => item.name !== topping.name,
+          );
 
-    if (filteredArray.length >= 3) {
-      setAditionalValue(aditionalValue - 0.5);
-    }
+          if (filteredArray.length >= 3) {
+            setAditionalValue(aditionalValue - 0.5);
+          }
 
-    setSelectedToppings([...filteredArray]);
+          setSelectedToppings([...filteredArray]);
+        },
+        style: 'destructive',
+      },
+    ]);
   };
 
   return (
@@ -241,7 +260,6 @@ const ChooseToppings: FC = () => {
       <Container>
         <PizzaWrapper>
           <PizzaImg source={pizzaImg} />
-          {/* <PizzaPrice>{`$${sizeValue + crustValue},00`}</PizzaPrice> */}
           <PizzaPrice>
             {`$${(pizzaState.totalValue + aditionalValue)
               .toFixed(2)
@@ -259,8 +277,9 @@ const ChooseToppings: FC = () => {
               onPress={(): void => handleToppingClick(item)}>
               {handleIsSelected(item) && (
                 <RemoveToppingButton
-                  onPress={(): void => handleRemoveTopping(item)}
-                />
+                  onPress={(): void => handleRemoveTopping(item)}>
+                  <RemoveToppingIcon source={IMAGES.closeIcon} />
+                </RemoveToppingButton>
               )}
 
               <ToppingItemImage source={item.image} resizeMode="contain" />
