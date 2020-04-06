@@ -65,25 +65,29 @@ const ToppingWrapper = styled.ScrollView({
   maxHeight: 100,
 });
 
-const ToppingItemWrapper = styled.TouchableOpacity({
-  borderRadius: 10,
-  backgroundColor: '#fff',
-  padding: 10,
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginHorizontal: 10,
-  marginTop: 10,
-  height: 80,
-  width: 130,
-  shadowColor: '#000',
-  shadowOffset: {
-    width: 0,
-    height: 2,
+const ToppingItemWrapper = styled.TouchableOpacity(
+  {
+    borderRadius: 10,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
+    marginTop: 10,
+    height: 80,
+    width: 130,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 10,
   },
-  shadowOpacity: 0.5,
-  shadowRadius: 4,
-  elevation: 10,
-});
+  ({ isSelected }: { isSelected: boolean }) => ({
+    backgroundColor: isSelected ? 'rgba(0,0,0, 0.2)' : '#fff',
+  }),
+);
 
 const ToppingItemImage = styled.Image({
   width: 25,
@@ -103,6 +107,16 @@ const Label = styled.Text({
   color: 'rgba(0,0,0, 0.5)',
 });
 
+const RemoveToppingButton = styled.TouchableOpacity({
+  backgroundColor: 'red',
+  position: 'absolute',
+  top: 10,
+  right: 10,
+  width: 20,
+  height: 20,
+  borderRadius: 10,
+});
+
 interface ToppingInterface {
   name: string;
   image: ImageSourcePropType;
@@ -111,7 +125,9 @@ interface ToppingInterface {
 const ChooseToppings: FC = () => {
   const navigation = useNavigation();
 
-  const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
+  const [selectedToppings, setSelectedToppings] = useState<
+    ToppingInterface[] | []
+  >([]);
 
   const toppings: ToppingInterface[] = [
     {
@@ -156,8 +172,22 @@ const ChooseToppings: FC = () => {
     },
   ];
 
-  const handleToppingClick = (index: number): void => {
-    // setSelectedToppings([...selectedToppings, toppings[index]]);
+  const handleIsSelected = (topping: ToppingInterface): boolean => {
+    return selectedToppings.some(
+      (selectedItem) => selectedItem.name === topping.name,
+    );
+  };
+
+  const handleToppingClick = (topping: ToppingInterface): void => {
+    setSelectedToppings([...selectedToppings, topping]);
+  };
+
+  const handleRemoveTopping = (topping: ToppingInterface): void => {
+    const filteredArray = selectedToppings.filter(
+      (item) => item.name !== topping.name,
+    );
+
+    setSelectedToppings([...filteredArray]);
   };
 
   return (
@@ -183,18 +213,23 @@ const ChooseToppings: FC = () => {
 
         <Label>Available toppings</Label>
         <ToppingWrapper horizontal showsHorizontalScrollIndicator={false}>
-          {toppings.map((item: ToppingInterface, index: number) => (
+          {toppings.map((item: ToppingInterface) => (
             <ToppingItemWrapper
+              isSelected={handleIsSelected(item)}
               key={item.name}
-              resizeMode="contain"
-              onPress={(): void => handleToppingClick(index)}>
-              <ToppingItemImage source={item.image} />
+              disabled={handleIsSelected(item)}
+              onPress={(): void => handleToppingClick(item)}>
+              {handleIsSelected(item) && (
+                <RemoveToppingButton
+                  onPress={(): void => handleRemoveTopping(item)}
+                />
+              )}
+
+              <ToppingItemImage source={item.image} resizeMode="contain" />
               <ToppingItemText>{item.name}</ToppingItemText>
             </ToppingItemWrapper>
           ))}
         </ToppingWrapper>
-
-        <Label>{selectedToppings}</Label>
       </Container>
     </>
   );
