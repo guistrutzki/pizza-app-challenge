@@ -22,6 +22,10 @@ const AppContainer: FC = () => {
           name={ROUTES.CHOOSE_TOPPINGS}
           component={SCREENS.CHOOSE_TOPPINGS}
         />
+        <Stack.Screen
+          name={ROUTES.CHECK_ORDER}
+          component={SCREENS.CHECK_ORDER}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
