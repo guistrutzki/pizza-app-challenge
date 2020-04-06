@@ -1,13 +1,13 @@
-import baconLabel from './bacon-label.png';
-import blackOlivesLabel from './black-olives-label.png';
+import baconLabel from './bacon-label.jpg';
+import blackOlivesLabel from './black-olives-label.jpg';
 import champignonLabel from './champignon-label.png';
-import cheeseLabel from './champignon-label.png';
-import greenPepperLabel from './green-pepper-label.png';
-import onionLabel from './onion-label.png';
-import pepperoniLabel from './pepperoni-label.png';
-import pineappleLabel from './pineapple-label.png';
-import sausageLabel from './sausage-label.png';
-import spinachLabel from './spinach-label.png';
+import cheeseLabel from './cheese-label.jpg';
+import greenPepperLabel from './green-pepper-label.jpeg';
+import onionLabel from './onion-label.jpg';
+import pepperoniLabel from './pepperoni-label.jpg';
+import pineappleLabel from './pineapple-label.jpg';
+import sausageLabel from './sausage-label.jpg';
+import spinachLabel from './spinach-label.jpg';
 import closeIcon from './close.png';
 
 export {

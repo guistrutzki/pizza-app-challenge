@@ -73,7 +73,6 @@ const ToppingWrapper = styled.ScrollView({
 const ToppingItemWrapper = styled.TouchableOpacity(
   {
     borderRadius: 10,
-    padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,
@@ -94,15 +93,18 @@ const ToppingItemWrapper = styled.TouchableOpacity(
   }),
 );
 
-const ToppingItemImage = styled.Image({
-  width: 25,
-  height: 25,
+const ToppingItemImage = styled.ImageBackground({
+  width: '100%',
+  height: '100%',
+  zIndex: 0,
+  justifyContent: 'center',
+  alignItems: 'center',
 });
 
 const ToppingItemText = styled.Text({
   fontSize: 18,
   textAlign: 'center',
-  color: '#724720',
+  color: '#000',
 });
 
 const Label = styled.Text({
@@ -112,18 +114,44 @@ const Label = styled.Text({
   color: 'rgba(0,0,0, 0.5)',
 });
 
+const Layer = styled.View(
+  {
+    backgroundColor: 'rgba(0,0,0, 0.4)',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    zIndex: 500,
+  },
+  ({ isSelected }: { isSelected: boolean }) => ({
+    backgroundColor: isSelected ? 'rgba(0,0,0, 0.8)' : 'rgba(0,0,0, 0.3)',
+  }),
+);
+
+const TextBackground = styled.View({
+  width: '100%',
+  backgroundColor: '#fff',
+  height: 40,
+  zIndex: 120,
+  justifyContent: 'center',
+  alignItems: 'center',
+});
+
 const RemoveToppingButton = styled.TouchableOpacity({
   position: 'absolute',
   top: 10,
   right: 10,
-  width: 20,
-  height: 20,
+  width: 25,
+  height: 25,
   borderRadius: 10,
+  zIndex: 50,
 });
 
 const RemoveToppingIcon = styled.Image({
-  width: 20,
-  height: 20,
+  width: 25,
+  height: 25,
   borderRadius: 10,
 });
 
@@ -310,8 +338,15 @@ const ChooseToppings: FC = () => {
                 </RemoveToppingButton>
               )}
 
-              <ToppingItemImage source={item.image} resizeMode="contain" />
-              <ToppingItemText>{item.name}</ToppingItemText>
+              <ToppingItemImage
+                source={item.image}
+                resizeMode="cover"
+                imageStyle={{ borderRadius: 10 }}>
+                <TextBackground>
+                  <ToppingItemText>{item.name}</ToppingItemText>
+                </TextBackground>
+                <Layer isSelected={handleIsSelected(item)} />
+              </ToppingItemImage>
             </ToppingItemWrapper>
           ))}
         </ToppingWrapper>
