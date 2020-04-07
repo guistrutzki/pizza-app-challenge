@@ -209,6 +209,7 @@ const ChooseToppings: FC = () => {
         selectedToppings,
       }),
     );
+    setAditionalValue(0);
     navigation.navigate(ROUTES.CHECK_ORDER);
   };
 
@@ -323,7 +324,7 @@ const ChooseToppings: FC = () => {
           </PizzaPrice>
         </PizzaWrapper>
 
-        <Label>Available toppings</Label>
+        <Label>Select pizza&apos;s topping</Label>
         <ToppingWrapper horizontal showsHorizontalScrollIndicator={false}>
           {toppings.map((item: ToppingInterface) => (
             <ToppingItemWrapper
