@@ -1,15 +1,35 @@
-import React, { FC, ComponentElement } from 'react';
+import React, { FC, useState, useRef } from 'react';
+import LottieView from 'lottie-react-native';
 import styled from 'styled-components/native';
+import { Animated, ImageSourcePropType } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ApplicationState } from '../../state';
 import { isSmallDevice, deviceWidth, deviceHeight } from '../../utils/layout';
 import PizzaActions from '../../state/ducks/Pizza/actions';
+import pizzaImg from '../../resources/images/pizza.png';
 import { PizzaState } from '../../state/ducks/Pizza/types';
 import Header from '../../components/Header';
 import normalize from '../../utils/normalize';
+import boxJson from '../../resources/lottieFiles/box-closing.json';
 import arrowLeft from '../../resources/images/left-arrow.png';
+
+const ContentContainerAnimated = styled(Animated.View)({
+  flex: 1,
+});
+
+const BoxContainer = styled(Animated.View)({
+  flex: 5,
+});
+
+const PizzaAnimated = styled(Animated.Image)({
+  position: 'absolute',
+  bottom: 0,
+  width: 400,
+  height: 400,
+  left: deviceWidth / 2 - 200,
+});
 
 const Container = styled.ScrollView({
   flex: 1,
@@ -85,6 +105,7 @@ const ButtonWrapper = styled.TouchableOpacity({
   height: 50,
   borderRadius: 10,
   marginTop: isSmallDevice ? 15 : 30,
+  marginBottom: isSmallDevice ? 50 : 0,
   justifyContent: 'center',
   alignItems: 'center',
   borderWidth: 1,
@@ -128,6 +149,74 @@ const CheckOrder: FC = () => {
     (state: ApplicationState) => state.pizza,
   );
 
+  const [headerShown, setHeaderShown] = useState<boolean>(true);
+  const [containerPosition] = useState(new Animated.Value(1));
+  const [boxPosition] = useState(new Animated.Value(-deviceWidth));
+  const [pizzaAnimated] = useState({
+    position: new Animated.Value(deviceHeight),
+    scale: new Animated.Value(0.5),
+  });
+
+  const lottieRef = useRef(null);
+
+  const animations = Animated.sequence([
+    Animated.timing(containerPosition, {
+      toValue: deviceWidth,
+      duration: 200,
+      useNativeDriver: true,
+    }),
+
+    Animated.delay(500),
+
+    Animated.timing(boxPosition, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+
+    Animated.timing(pizzaAnimated.position, {
+      toValue: 50,
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+
+    Animated.delay(1000),
+
+    Animated.parallel([
+      Animated.timing(pizzaAnimated.position, {
+        toValue: -deviceHeight / 3,
+        duration: 1500,
+        useNativeDriver: true,
+      }),
+
+      Animated.timing(pizzaAnimated.scale, {
+        toValue: 0,
+        duration: 1500,
+        useNativeDriver: true,
+      }),
+    ]),
+  ]);
+
+  const lastAnimation = Animated.sequence([
+    Animated.timing(boxPosition, {
+      toValue: deviceWidth,
+      duration: 500,
+      useNativeDriver: true,
+    }),
+  ]);
+
+  const handleConfirm = (): void => {
+    animations.start((): void => {
+      lottieRef?.current?.play();
+      setTimeout(() => {
+        lastAnimation.start();
+      }, 3000);
+    });
+    setTimeout(() => {
+      setHeaderShown(false);
+    }, 500);
+  };
+
   const sizeStringfied = {
     0: 'Small',
     1: 'Medium',
@@ -141,57 +230,96 @@ const CheckOrder: FC = () => {
 
   return (
     <>
-      <Header
-        headerLeft={
-          <HeaderBackButton onPress={(): void => navigation.goBack()}>
-            <HeaderBackImage source={arrowLeft} />
-          </HeaderBackButton>
-        }
-        headerCenter={
-          <HeaderTitleWrapper>
-            <HeaderTitleText>Check your order</HeaderTitleText>
-          </HeaderTitleWrapper>
-        }
-      />
+      {headerShown && (
+        <Header
+          headerLeft={
+            <HeaderBackButton onPress={(): void => navigation.goBack()}>
+              <HeaderBackImage source={arrowLeft} />
+            </HeaderBackButton>
+          }
+          headerCenter={
+            <HeaderTitleWrapper>
+              <HeaderTitleText>Check your order</HeaderTitleText>
+            </HeaderTitleWrapper>
+          }
+        />
+      )}
 
-      <Container>
-        <ConfirmOrderText>Confirm your pizza</ConfirmOrderText>
-        <ConfirmTable>
+      {!headerShown && (
+        <>
+          <BoxContainer
+            style={{
+              transform: [
+                {
+                  translateX: boxPosition,
+                },
+              ],
+            }}>
+            <LottieView source={boxJson} ref={lottieRef} loop={false} />
+          </BoxContainer>
+
+          <PizzaAnimated
+            source={pizzaImg}
+            resizeMode="contain"
+            style={{
+              transform: [
+                {
+                  translateY: pizzaAnimated.position,
+                },
+                { scale: pizzaAnimated.scale },
+              ],
+            }}
+          />
+        </>
+      )}
+
+      <ContentContainerAnimated
+        style={{
+          transform: [
+            {
+              translateX: containerPosition,
+            },
+          ],
+        }}>
+        <Container>
+          <ConfirmOrderText>Confirm your pizza</ConfirmOrderText>
+          <ConfirmTable>
+            <TableLine>
+              <LineText isTitle>Size</LineText>
+              <LineText>{sizeStringfied[pizzaState.size]}</LineText>
+            </TableLine>
+
+            <TableLine>
+              <LineText isTitle>Crust</LineText>
+              <LineText>{crustStringfied[pizzaState.crust]}</LineText>
+            </TableLine>
+          </ConfirmTable>
+
+          <ToppingsWrapper>
+            <ToppingTitle>Pizza&apos;s topping</ToppingTitle>
+            {pizzaState.selectedToppings.length <= 0 && (
+              <LineText>No pizza topping selected</LineText>
+            )}
+            {pizzaState.selectedToppings.map((item: ToppingInterface) => (
+              <ToppingItem>
+                <Circle />
+                <LineText>{item.name}</LineText>
+              </ToppingItem>
+            ))}
+          </ToppingsWrapper>
+
           <TableLine>
-            <LineText isTitle>Size</LineText>
-            <LineText>{sizeStringfied[pizzaState.size]}</LineText>
+            <LineText isTitle>Total</LineText>
+            <LineText>
+              {`$${pizzaState.totalValue.toFixed(2).replace('.', ',')}`}
+            </LineText>
           </TableLine>
 
-          <TableLine>
-            <LineText isTitle>Crust</LineText>
-            <LineText>{crustStringfied[pizzaState.crust]}</LineText>
-          </TableLine>
-        </ConfirmTable>
-
-        <ToppingsWrapper>
-          <ToppingTitle>Pizza&apos;s topping</ToppingTitle>
-          {pizzaState.selectedToppings.length <= 0 && (
-            <LineText>No pizza topping selected</LineText>
-          )}
-          {pizzaState.selectedToppings.map((item: ToppingInterface) => (
-            <ToppingItem>
-              <Circle />
-              <LineText>{item.name}</LineText>
-            </ToppingItem>
-          ))}
-        </ToppingsWrapper>
-
-        <TableLine>
-          <LineText isTitle>Total</LineText>
-          <LineText>
-            {`$${pizzaState.totalValue.toFixed(2).replace('.', ',')}`}
-          </LineText>
-        </TableLine>
-
-        <ButtonWrapper>
-          <ButtonText>Confirm</ButtonText>
-        </ButtonWrapper>
-      </Container>
+          <ButtonWrapper onPress={handleConfirm}>
+            <ButtonText>Confirm</ButtonText>
+          </ButtonWrapper>
+        </Container>
+      </ContentContainerAnimated>
     </>
   );
 };
