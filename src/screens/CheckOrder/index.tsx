@@ -194,6 +194,7 @@ interface ToppingInterface {
 
 const CheckOrder: FC = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const pizzaState: PizzaState = useSelector(
     (state: ApplicationState) => state.pizza,
   );
@@ -256,7 +257,7 @@ const CheckOrder: FC = () => {
 
     Animated.spring(modalScale, {
       toValue: 1,
-      duration: 500,
+      bounciness: 5,
       useNativeDriver: true,
     }),
   ]);
@@ -271,6 +272,10 @@ const CheckOrder: FC = () => {
     setTimeout(() => {
       setHeaderShown(false);
     }, 500);
+  };
+
+  const handleModalButton = (): void => {
+    dispatch(PizzaActions.resetPizzaState());
   };
 
   const sizeStringfied = {
@@ -343,7 +348,7 @@ const CheckOrder: FC = () => {
         />
         <SucessTitle>Your order is on its way !</SucessTitle>
         <GoToBeginText>Do you want to order another pizza ?</GoToBeginText>
-        <ButtonModal>
+        <ButtonModal onPress={handleModalButton}>
           <ButtonText>Yess!</ButtonText>
         </ButtonModal>
       </SuccessModal>

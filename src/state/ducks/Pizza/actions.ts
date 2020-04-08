@@ -8,7 +8,7 @@ interface PizzaSizeInterface {
 
 interface SetPizzaSizeReturn {
   type: string;
-  payload: PizzaSizeInterface;
+  payload?: PizzaSizeInterface;
 }
 
 interface PizzaToppingsInterface {
@@ -33,6 +33,19 @@ const setPizzaToppings = (
   payload,
 });
 
-const PizzaActions = { setPizzaSize, setPizzaToppings };
+const resetPizzaState = (): SetPizzaSizeReturn => ({
+  type: PizzaTypes.RESET_STATE,
+});
+
+const initPreload = (): SetPizzaSizeReturn => ({
+  type: PizzaTypes.INIT_PRELOAD,
+});
+
+const PizzaActions = {
+  setPizzaSize,
+  setPizzaToppings,
+  resetPizzaState,
+  initPreload,
+};
 
 export default PizzaActions;

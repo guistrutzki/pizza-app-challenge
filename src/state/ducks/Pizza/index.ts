@@ -6,6 +6,7 @@ const INITIAL_STATE: PizzaState = {
   size: 0,
   totalValue: 0,
   selectedToppings: [],
+  isLoading: true,
 };
 
 const reducer: Reducer<PizzaState> = (state = INITIAL_STATE, action) => {
@@ -15,6 +16,12 @@ const reducer: Reducer<PizzaState> = (state = INITIAL_STATE, action) => {
 
     case PizzaTypes.SET_PIZZA_TOPPINGS:
       return { ...state, ...action.payload };
+
+    case PizzaTypes.RESET_STATE:
+      return INITIAL_STATE;
+
+    case PizzaTypes.INIT_PRELOAD:
+      return { ...state, isLoading: false };
 
     default:
       return state;
