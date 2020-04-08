@@ -1,4 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
+import { StatusBar } from 'react-native';
 import styled from 'styled-components/native';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -227,7 +228,7 @@ const ChooseSize: FC = () => {
 
   return (
     <>
-      {/* //TODO FIX THIS */}
+      <StatusBar barStyle="dark-content" />
       <Header
         headerCenter={
           <HeaderTitleWrapper>
