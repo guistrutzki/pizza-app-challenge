@@ -13,6 +13,7 @@ import { PizzaState } from '../../state/ducks/Pizza/types';
 import Header from '../../components/Header';
 import normalize from '../../utils/normalize';
 import boxJson from '../../resources/lottieFiles/box-closing.json';
+import partyJson from '../../resources/lottieFiles/party.json';
 import arrowLeft from '../../resources/images/left-arrow.png';
 
 const ContentContainerAnimated = styled(Animated.View)({
@@ -21,6 +22,54 @@ const ContentContainerAnimated = styled(Animated.View)({
 
 const BoxContainer = styled(Animated.View)({
   flex: 5,
+});
+
+const SuccessModal = styled(Animated.View)({
+  width: deviceWidth * 0.9,
+  opacity: 1,
+  left: deviceWidth * 0.05,
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  position: 'absolute',
+  top: deviceHeight / 2 - 150,
+  borderRadius: 20,
+  padding: 20,
+  backgroundColor: '#fff',
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.5,
+  shadowRadius: 4,
+  elevation: 10,
+});
+
+const ButtonModal = styled.TouchableOpacity({
+  width: '80%',
+  height: 50,
+  borderRadius: 10,
+  marginTop: isSmallDevice ? 15 : 30,
+  marginBottom: isSmallDevice ? 50 : 0,
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderWidth: 1,
+  borderColor: '#c1c1c1',
+  backgroundColor: 'rgba(114,71,32, 1)',
+});
+
+const SucessTitle = styled.Text({
+  fontSize: 24,
+  color: '#7e512a',
+  fontWeight: 700,
+  textAlign: 'center',
+  marginBottom: 20,
+});
+
+const GoToBeginText = styled.Text({
+  fontSize: 18,
+  color: '#7e512a',
+  textAlign: 'center',
 });
 
 const PizzaAnimated = styled(Animated.Image)({
@@ -152,6 +201,7 @@ const CheckOrder: FC = () => {
   const [headerShown, setHeaderShown] = useState<boolean>(true);
   const [containerPosition] = useState(new Animated.Value(1));
   const [boxPosition] = useState(new Animated.Value(-deviceWidth));
+  const [modalScale] = useState(new Animated.Value(0));
   const [pizzaAnimated] = useState({
     position: new Animated.Value(deviceHeight),
     scale: new Animated.Value(0.5),
@@ -203,6 +253,12 @@ const CheckOrder: FC = () => {
       duration: 500,
       useNativeDriver: true,
     }),
+
+    Animated.spring(modalScale, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }),
   ]);
 
   const handleConfirm = (): void => {
@@ -245,6 +301,8 @@ const CheckOrder: FC = () => {
         />
       )}
 
+      {/* Transitions */}
+
       {!headerShown && (
         <>
           <BoxContainer
@@ -272,6 +330,25 @@ const CheckOrder: FC = () => {
           />
         </>
       )}
+
+      <SuccessModal
+        style={{
+          transform: [{ scale: modalScale }],
+        }}>
+        <LottieView
+          source={partyJson}
+          loop
+          autoPlay
+          style={{ width: 100, height: 100 }}
+        />
+        <SucessTitle>Your order is on its way !</SucessTitle>
+        <GoToBeginText>Do you want to order another pizza ?</GoToBeginText>
+        <ButtonModal>
+          <ButtonText>Yess!</ButtonText>
+        </ButtonModal>
+      </SuccessModal>
+
+      {/* End Transitions */}
 
       <ContentContainerAnimated
         style={{
