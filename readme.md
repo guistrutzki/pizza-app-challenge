@@ -52,11 +52,6 @@
 -   [Redux](https://github.com/reduxjs/react-redux)
 -   [Lottie](https://github.com/react-native-community/lottie-react-native)
 
-To Be Continue
-Fix UI in Android
-Find a better way to organize css
-Unit test
-
 ## :construction_worker: **To Be Continue**
 
 * Unit tests
